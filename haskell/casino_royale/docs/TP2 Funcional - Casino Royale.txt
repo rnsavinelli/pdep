@@ -1,0 +1,193 @@
+﻿Oooh, sí... “Bond... James Bond”, el recién ascendido agente 007, necesita asegurar su victoria en la partida de Poker que se realizará en el Casino Royale,  en la cual deberá enfrentar al “banquero de los terroristas”: Le Chiffre. No puede permitirse una derrota en su primera misión como agente doble cero, y por lo tanto no se conforma con sus chances “naturales” en el Poker, así que nos pidió analizar el juego mediante un programa hecho en Haskell.
+
+
+Para ayudar al agente 007 en su misión, tenemos el siguiente modelo:
+
+
+Las cartas están definidas por tuplas (número, palo) siendo número un valor entre 1 y 13 y palo un valor de la siguiente lista:
+palos = ["Corazones", "Picas", "Tréboles", "Diamantes"]
+type Carta = (Number, String)
+
+
+En el caso de los jugadores, se constituyen por: su nombre, la mano que están jugando y el nombre de su bebida preferida.
+
+
+data Jugador = Jugador {
+nombre :: String,
+mano :: [Carta],
+bebida :: String,
+}
+
+
+Y las funciones constantes:
+pokerDeAses    = [(1,"Corazones"), (1,"Picas"), (1,"Tréboles"), (1,"Diamantes"), (10,"Diamantes")]
+fullDeJokers   = [(11,"Corazones"), (11,"Picas"), (11,"Tréboles"), (10,"Diamantes"), (10,"Picas")]
+piernaDeNueves = [(9,"Corazones"), (9,"Picas"), (9,"Tréboles"), (10,"Diamantes"), (4,"Copas")]
+
+
+Para hacer las pruebas, vamos a necesitar modelar a los siguientes jugadores:
+* James Bond (el bueno), cuyo nombre es "Bond... James Bond", tiene un poker de ases y toma "Martini... shaken, not stirred".
+* Le Chiffre (el malo), que tiene un full de jokers y toma Gin.
+* Felix Leiter, que tiene una pierna de nueves. Su bebida preferida es el Whisky.
+
+
+jamesBond   = Jugador "Bond... James Bond" pokerDeAses "Martini... shaken, not stirred"
+leChiffre   = Jugador "Le Chiffre" fullDeJokers "Gin"
+felixLeiter = Jugador "Felix Leiter" piernaDeNueves "Whisky"
+
+
+Una mesa de juego tiene a todos los jugadores participantes representados en una lista:
+mesaQueMasAplauda = [jamesBond, leChiffre, felixLeiter]
+
+
+Tenemos las siguientes funciones disponibles:
+
+
+ocurrenciasDe x = length . filter (== x)
+concatenar = foldl (++) []
+
+
+Se pide definir las funciones indicadas, usando correctamente al menos una vez cada uno de los siguientes conceptos:
+* Orden superior
+* Aplicación parcial
+* Composición
+
+1.    1. mayorSegun/3, que dada una función y dos valores nos devuelve aquel valor que hace mayor a la función (en caso de igualdad, cualquiera de los dos).
+
+
+      2. maximoSegun/2, que dada una función y una lista de valores nos devuelve aquel valor de la lista que hace máximo a la función. No usar recursividad.
+
+
+      3. sinRepetidos/1, que dada una lista devuelve la misma sin elementos repetidos. Los elementos tienen que aparecer en el mismo orden que en la lista original (la primera ocurrencia de la lista de izquierda a derecha).
+
+
+2.    1. esoNoSeVale/1, que se cumple para una carta inválida, ya sea por número o por palo (ver arriba cómo tiene que ser una carta).
+
+
+      2. manoNegra/1, que dado un jugador, nos indica si tiene una mano mal armada. Esto es cuando sus cartas no son exactamente 5, o alguna carta es inválida.
+
+
+3.    Dada una lista de cartas, hacer las funciones que verifican si las mismas forman un juego dado, según las siguientes definiciones:
+
+     1. par --> tiene un número que se repite 2 veces
+     2. pierna --> tiene un número que se repite 3 veces
+     3. color -->  todas sus cartas son del mismo palo
+     4. fullHouse --> es, a la vez, par y pierna
+     5. poker --> tiene un número que se repite 4 veces
+     6. otro --> se cumple para cualquier conjunto de cartas
+
+Ejemplos:
+?- par [(1,"Corazones"), (1,"Picas"), (3,"Tréboles"), (4,"Diamantes"), (10,"Diamantes")]
+True
+?- par [(1,"Corazones"), (1,"Picas"), (1,"Tréboles"), (1,"Diamantes"), (10,"Diamantes")]
+False
+Como puede verse, cuando se indica la cantidad de veces que tiene que repetirse, tiene que ser la cantidad exacta.
+
+
+4. alguienSeCarteo/1, dada una lista de jugadores. Sabemos que alguien se carteó cuando hay alguna carta que se repite, ya sea en un mismo jugador o en distintos.
+
+
+5.    1. Dada la siguiente lista de valores para los distintos juegos:
+valores = [(par,1), (pierna,2), (color,3), (fullHouse,5), (poker,5), (otro, 0)]
+Definir valor/1 que, dada una lista de cartas, nos indique el valor del mismo, que es el máximo valor entre los juegos que la lista de cartas cumple.
+
+
+   2. bebidaWinner/1, que dada una lista de jugadores nos devuelve la bebida de aquel jugador que tiene el juego de mayor valor, pero sin considerar a aquellos que tienen manos mal armadas.
+
+
+   6. Realizar las consultas que indiquen:
+   1. El nombre del jugador que está tomando la bebida de nombre más largo.
+   2. El jugador con mayor cantidad de cartas inválidas.
+   3. El jugador de nombre más corto.
+   4. El nombre del ganador de una mesa, que es aquel del jugador con el juego de mayor valor.
+Nota: No definir funciones auxiliares para este punto. Construir las consultas únicamente en base a las funciones definidas para puntos anteriores.
+
+
+      7.       1. Implementar una función de ordenamiento ordenar/2, que dado un criterio y una lista me devuelva la misma lista con sus elementos ordenados en base al criterio.
+> ordenar (>) [5, 7, 2, 4, 6]
+[2, 4, 5, 6, 7]
+
+Tip: Notar la diferencia con el punto 1, ya que la función-parámetro devuelve un booleano en lugar de uno de los valores comparados.
+
+
+         2. Implementar las funciones para los juegos “escalera” y “escalera de color”.
+         1. Una escalera es una sucesión de números con las 5 cartas. ¡Cuidado! Las cartas pueden estar desordenadas. Por ejemplo, si tengo las cartas 6, 3, 4, 2, 5 (no importa el palo) eso es una escalera porque tiene las cartas del 2 al 6.
+         2. Una escaleraDeColor es como una escalera pero que tiene todas las cartas del mismo palo.
+
+
+________________
+
+
+Posible solución
+
+
+-- Auxiliares:
+nombreDe (Jugador nombre _ _) = nombre
+cartasDe (Jugador _ cartas _) = cartas
+bebidaDe (Jugador _ _ bebida) = bebida
+
+
+         1.          1. mayorSegun/3, que dada una función y dos valores nos devuelve aquel valor que hace mayor a la función (en caso de igualdad, cualquiera de los dos).
+mayorSegun f x y
+        | f x > f y = x
+        | otherwise = y
+
+
+         2. maximoSegun/2, que dada una función y una lista de valores nos devuelve aquel valor de la lista que hace máximo a la función. No usar recursividad.
+maximoSegun f lista = foldl1 (mayorSegun f) lista
+
+
+         2.          1. esoNoSeVale/1, que se cumple para una carta inválida, ya sea por número o por palo.
+esoNoSeVale (numero, palo) = not (elem numero [1..13] && elem palo palos)
+
+
+         2. manoNegra/1, que dado un jugador, nos indica si tiene una mano mal armada. Esto es cuando sus cartas no son exactamente 5, o alguna carta es inválida.
+manoNegra (Jugador _ cartas _) = length cartas /= 5  || any esoNoSeVale cartas
+
+
+         3. Dada una lista de cartas, hacer las funciones que verifican si las mismas forman un juego dado, según las siguientes definiciones:
+         1. par --> tiene un número que se repite 2 veces
+         2. pierna --> tiene un número que se repite 3 veces
+         3. color -->  todas sus cartas son del mismo palo
+         4. fullHouse --> es, a la vez, par y pierna
+         5. poker --> tiene un número que se repite 4 veces
+         6. otro --> se cumple para todos los juegos
+
+
+par = tieneRepeticiones 2
+pierna = tieneRepeticiones 3
+poker = tieneRepeticiones 4
+fullHouse cartas = par cartas && pierna cartas
+color ((_,p):cartas) = all ((==p).snd) cartas
+otro _ = True
+tieneRepeticiones n cartas = any ((== n) . flip ocurrenciasDe numeros) (sinRepetidos numeros)
+        where numeros = map fst cartas
+
+
+         4. alguienSeCarteo/1, dada una lista de jugadores. Sabemos que alguien se carteó cuando hay alguna carta que se repite, ya sea en un mismo jugador o en distintos.
+alguienSeCarteo jugadores = cartas /= sinRepetidos cartas
+        where cartas = concatenar . map cartasDe $ jugadores
+
+
+         5.          1. Dada la siguiente lista de valores para los distintos juegos:
+valores = [(par,1), (pierna,2), (color,3), (fullHouse,4), (poker,5), (otro, 0)]
+Definir valor/1 que, dada una lista de cartas, nos indique el valor del mismo, que es el máximo valor entre los juegos que la lista de cartas cumple.
+valor cartas = maximum [v | (juego, v) <- valores, juego cartas]
+
+
+            2. bebidaWinner/1, que dada una lista de jugadores nos devuelve la bebida de aquel jugador que tiene el juego de mayor valor, pero sin considerar a aquellos que tienen manos mal armadas.
+bebidaWinner = bebidaDe . maximoSegun (valor . cartasDe) . filter (not . manoNegra)
+
+
+            6. Realizar las consultas que indiquen:
+            1. El nombre del jugador que está tomando la bebida de nombre más largo.
+            2. El jugador (entero, no sólo el nombre) con mayor cantidad de cartas inválidas.
+            3. El jugador de nombre más corto.
+            4. El nombre del ganador de una mesa, que es aquel del jugador con el juego de mayor valor.
+Nota: No definir funciones auxiliares para este punto. Construir las consultas únicamente en base a las funciones definidas para puntos anteriores.
+
+
+> nombreDe $ maximoSegun (length . bebidaDe) mesa1
+> maximoSegun (length . filter esoNoSeVale . cartasDe) mesa1
+> maximoSegun ((*(-1)) . length . nombre) mesa1
+> nombreDe $ maximoSegun (valor . cartasDe) mesa1
