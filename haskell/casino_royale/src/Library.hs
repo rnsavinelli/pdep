@@ -15,6 +15,8 @@ data Jugador = Jugador {
     bebida :: Bebida
 } deriving Show
 
+type Mesa = [Jugador]
+
 -- ocurrenciasDe :: Number -> [] -> Number
 ocurrenciasDe x = length . filter (== x)
 
@@ -27,8 +29,10 @@ mayorSegun funcion x y
     | otherwise = y
 
 -- 1.b
-maximoSegun _ [x] = x
-maximoSegun f (x:y:xs) = maximoSegun f (mayorSegun f x y:xs)
+maximoSegun' _ [x] = x
+maximoSegun' f (x:y:xs) = maximoSegun f (mayorSegun f x y:xs)
+
+maximoSegun f list = foldl1 (mayorSegun f) list
 
 -- 1.c
 sinRepetidos [] = []
@@ -72,3 +76,20 @@ pokerCartas cartas = any (seRepite 4 numeros) numeros
 -- 3.f
 otroCartas :: Mano -> Bool
 otroCartas _ = True
+
+-- 4
+alguienSeCarteo mesa = cartasEnJuego /= sinRepetidos cartasEnJuego
+    where cartasEnJuego = concatenar . map mano $ mesa
+
+alguienSeCarteo' mesa = any ((>1).flip ocurrenciasDe cartasEnJuego) cartasEnJuego
+    where cartasEnJuego = concatenar . map mano $ mesa    
+
+-- 5.a
+valores = [(parCartas,1), (piernaCartas,2), (colorCartas,3), (fullHouseCartas,5), (pokerCartas,5), (otroCartas, 0)]
+
+valor mano = snd . maximoSegun snd . filter (($mano).fst) $ valores
+
+valor' mano = maximum . map snd . filter (($mano).fst) $ valores
+
+-- 5.b
+bebidaWinner = bebida . maximoSegun (valor.mano) . filter (not.manoNegra)
