@@ -93,3 +93,11 @@ valor' mano = maximum . map snd . filter (($mano).fst) $ valores
 
 -- 5.b
 bebidaWinner = bebida . maximoSegun (valor.mano) . filter (not.manoNegra)
+
+-- 6
+
+-- nombre . maximoSegun (length.bebida) $ mesa
+-- maximoSegun (length . filter esoNoSeVale . mano) $ mesa
+-- maximoSegun (length.bebida) $ mesa
+-- maximoSegun (negated . length . nombre) $ mesa
+-- nombre . maximoSegun (valor.mano) $ mesa
