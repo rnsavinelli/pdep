@@ -1,0 +1,27 @@
+import csGo.*
+
+// auto-generated at 13/11/2021 11:42:17
+test "exported test from REPL session" {
+	
+	var a = new Jugador()
+	
+	var pistolita = new Equipamiento(costo=750)
+	var palo = new Equipamiento(costo=8)
+	
+	a.adquirirEquipamiento(pistolita)
+	a.dineroGastado()
+	a.avatar().equipamiento().costo()
+	a.avatar().survived(false)
+	var enf = new Enfrentamiento()
+	enf.terrorists().add(a)
+	enf.mvp()
+	enf.counterTerrorists().add(new Jugador())
+	enf.counterTerrorists().add(new Jugador())
+	enf.terrorists().add(new Jugador())	
+	
+	enf.nuevaPartida()
+	
+	enf.realizarCompras([palo, pistolita], [pistolita, palo, palo])
+	enf.terrorists().map({t => t.avatar().equipamiento().costo()})
+	enf.counterTerrorists().map({t => t.avatar().equipamiento().costo()})	
+}

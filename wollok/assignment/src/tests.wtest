@@ -1,0 +1,198 @@
+import mutantes.*
+import habilidades.*
+import facciones.*
+import entrenamientos.*
+import exceptions.*
+
+// Segunda Entrega
+describe "Test de Facciones" {
+
+	const ciclope = new Mutante(nombre = "Scott Summers", potencial = 30, habilidades = #{ new ExplosionOptica(nivel = 11) })
+	const fenix = new Mutante(nombre = "Jean Grey", potencial = 40, habilidades = #{ new Telepatia(nivel = 13) })
+	const quicksilver = new Mutante(nombre = "Pietro Maximoff", potencial = 35, habilidades = #{ new Supervelocidad(nivel = 9) })
+	const iceman = new Mutante(nombre = "Bobby Drake", potencial = 25, habilidades = #{ new Transformacion(nivel = 7) })
+	const cable = new Mutante(nombre = "Nathan Summers", potencial = 25, habilidades = #{ new Telequinesis(nivel = 10) })
+	const domino = new Mutante(nombre = "Neena Thurman", potencial = 30, habilidades = #{ new Suerte(nivel = 13) })
+	const sunspot = new Mutante(nombre = "Roberto Da Costa", potencial = 30, habilidades = #{ new AbsorcionSolar(nivel = 8) })
+	const magneto = new Mutante(nombre = "Erik Lenhsherr", potencial = 50, habilidades = #{ new Magnetismo(nivel = 14) })
+	const blob = new Mutante(nombre = "Fred Dukes", potencial = 20, habilidades = #{ new Inamovible(nivel = 6) })
+	const shrek = new Mutante(nombre = "Shrek", potencial = 25, habilidades = #{ new Telequinesis(nivel = 10) })
+	const x_force = new Faccion(nombre = "X-Force", mutantes = #{ cable, domino, sunspot })
+	const hermandad = new Faccion(nombre = "Hermandad", mutantes = #{ magneto, blob, quicksilver })
+	const x_men = new Faccion(nombre = "X-Men", mutantes = #{ ciclope, fenix, iceman, sunspot, cable })
+	const shrek_force = new Faccion(nombre = "Shrek-Force", mutantes = #{ shrek })
+
+	// Tests de agregar y quitar mutantes
+	test "Agregamos a Magneto a X-Force" {
+		x_force.agregarMutante(magneto)
+		assert.equals(x_force.mutantes().contains(magneto), true)
+	}
+
+	test "Quitamos a Blob de Hermandad" {
+		hermandad.quitarMutante(blob)
+		assert.equals(hermandad.mutantes().contains(blob), false)
+	}
+
+	// Tests de poder total
+	test "El poder total de X-Force es 855" {
+		assert.equals(x_force.poderTotal(), 855)
+	}
+
+	test "El poder total de X-Force al agregar otro mutante con un nucleo que ya posee (telequinesis) es 1170" {
+		x_force.agregarMutante(shrek)
+		assert.equals(x_force.poderTotal(), 1170)
+	}
+
+	// Tests de mutantes en común
+	test "Sunspot y Cable están en X-Men y en X-Force" {
+		assert.equals(x_men.mutantesEnComun(x_force), #{ sunspot, cable })
+	}
+
+	test "Sherk-Force y X-Men no tienen mutantes en común" {
+		assert.equals(x_men.mutantesEnComun(shrek_force), #{})
+	}
+
+	// Tests de conviene agregar
+	test "Conviene agregar a Ciclope a X-Force porque tiene un nucleo nuevo para la faccion" {
+		assert.equals(x_force.convieneAgregarA(ciclope), true)
+	}
+
+	test "Conviene agregar al Profesor X a los X-Men porque tiene un nivel de Telepatia mayor al de Fenix" {
+		const profesorX = new Mutante(nombre = "Charles Xavier", potencial = 40, habilidades = #{ new Telepatia(nivel = 15) })
+		assert.equals(x_men.convieneAgregarA(profesorX), true)
+	}
+
+	// Tests de entrenamiento
+	test "Entrenamos a ciclope y shrek con entrenamiento básico por 3 horas. Shrek pasa de potencial 25 a 28, ciclope de 30 a 33." {
+		const sesion = new Entrenamiento()
+		sesion.duracion(3)
+		sesion.mutantes(#{ shrek, ciclope })
+		sesion.entrenamientoBasico()
+		assert.equals(shrek.potencial(), 28)
+		assert.equals(ciclope.potencial(), 33)
+	}
+
+	test "Entrenamos a ciclope y shrek con entrenamiento completo con enfoque en Explosión óptica por 3 horas. Shrek pasa de potencial 
+		  25 a 28, ciclope de 30 a 33, con su explosión optica pasando a nivel 13." {
+		const sesion = new Entrenamiento()
+		sesion.duracion(3)
+		sesion.mutantes(#{ shrek, ciclope })
+		sesion.nucleos(#{ "Explosion Optica" })
+		sesion.entrenamientoCompleto()
+		const nivelesHabilidadesCiclope = new Dictionary()
+		ciclope.habilidades().forEach({ habilidad => nivelesHabilidadesCiclope.put(habilidad.nucleo(), habilidad.nivel())})
+		assert.equals(nivelesHabilidadesCiclope.get("Explosion Optica"), 13)
+		assert.equals(shrek.potencial(), 28)
+		assert.equals(ciclope.potencial(), 33)
+	}
+
+	// Tests de entrenamiento de faccion
+	test "X-Force entrena a todos sus miembros por dos horas con enfoque el Telequinesis.
+		  Esto deberia resultar en Cable aumentando su potencial a 27 y su nivel de Telequinesis a 12 y Domino y Sunspot ambos
+		  aumentando su potencial a 32" {
+		x_force.entrenamiento(2, #{ "Telequinesis" })
+		const nivelesHabilidadesDeCable = new Dictionary()
+		cable.habilidades().forEach({ habilidad => nivelesHabilidadesDeCable.put(habilidad.nucleo(), habilidad.nivel())})
+		assert.equals(nivelesHabilidadesDeCable.get("Telequinesis"), 12)
+		assert.equals(cable.potencial(), 27)
+		assert.equals(domino.potencial(), 32)
+		assert.equals(sunspot.potencial(), 32)
+	}
+
+	test "X-Force entrena a todos sus miembros con entrenamiento básico por 2 horas. 
+		  Esto deberia resultar en Cable aumentando su potencial a 27 y Domino y Sunspot ambos aumentando su potencial a 32" {
+		x_force.entrenamiento(2)
+		assert.equals(cable.potencial(), 27)
+		assert.equals(domino.potencial(), 32)
+		assert.equals(sunspot.potencial(), 32)
+	}
+
+}
+
+// Primera Entrega
+describe "Test de poderTotal()" {
+
+	const ciclope = new Mutante(nombre = "Scott Summers", potencial = 30, habilidades = #{ new ExplosionOptica() })
+	const fenix = new Mutante(nombre = "Jean Grey", potencial = 40, habilidades = #{ new Telepatia() })
+	const quicksilver = new Mutante(nombre = "Pietro Maximoff", potencial = 35, habilidades = #{ new Supervelocidad() })
+	const iceman = new Mutante(nombre = "Bobby Drake", potencial = 25, habilidades = #{ new Transformacion() })
+
+	test "Ciclope tiene 60 de poder total" {
+		assert.equals(ciclope.poderTotal(), 60)
+	}
+
+	test "Fenix NO tiene 80 de poder total" {
+		assert.notEquals(fenix.poderTotal(), 80)
+	}
+
+	test "El poder total de Iceman deberia ser 20" {
+		assert.equals(iceman.poderTotal(), 20)
+	}
+
+	test "el poder total de Quicksilver deberia ser 60, pues su potencial es impar" {
+		assert.equals(quicksilver.poderTotal(), 60)
+	}
+
+}
+
+describe "Test de puedeAprenderHabilidad()" {
+
+	const supervelocidad = new Supervelocidad()
+	const explosionOptica = new ExplosionOptica()
+	const transformacion = new Transformacion()
+	const telepatia = new Telepatia()
+	const inamovible = new Inamovible()
+	
+	const ciclope = new Mutante(nombre = "Scott Summers", potencial = 30, habilidades = #{ explosionOptica })
+	const fenix = new Mutante(nombre = "Jean Grey", potencial = 40, habilidades = #{ telepatia })
+	const quicksilver = new Mutante(nombre = "Pietro Maximoff", potencial = 35, habilidades = #{ supervelocidad })
+	const iceman = new Mutante(nombre = "Bobby Drake", potencial = 25, habilidades = #{ transformacion })
+	const blob = new Mutante(nombre = "Fred Dukes", potencial = 20, habilidades = #{ inamovible })
+
+	test "Iceman PUEDE aprender Supervelocidad" {
+		assert.equals(supervelocidad.puedeAprenderHabilidad(iceman), true)
+	}
+
+	test "Fenix NO PUEDE aprender Supervelocidad" {
+		assert.equals(supervelocidad.puedeAprenderHabilidad(fenix), false)
+	}
+
+	test "Fenix NO PUEDE aprender Explosion Óptica" {
+		assert.equals(explosionOptica.puedeAprenderHabilidad(fenix), false)
+	}
+
+	test "Ciclope NO PUEDE aprender Transformación" {
+		assert.equals(transformacion.puedeAprenderHabilidad(ciclope), false)
+	}
+
+	test "Quicksilver NO PUEDE aprender telepatia" {
+		assert.equals(telepatia.puedeAprenderHabilidad(quicksilver), false)
+	}
+
+	test "Ciclope aprende Supervelocidad, y luego Transformación" {
+		assert.doesNotThrowException({ciclope.aprender(supervelocidad)})
+		assert.doesNotThrowException({ciclope.aprender(transformacion)})
+	}
+
+	test "Fenix aprende Transformación, y luego aprende Explosión óptica" {
+		assert.doesNotThrowException({fenix.aprender(transformacion)})
+		assert.doesNotThrowException({fenix.aprender(explosionOptica)})
+	}
+
+	test "Las habilidades de Iceman después de aprender Supervelocidad son [transformacion, supervelocidad]" {
+		iceman.aprender(supervelocidad)
+		assert.equals(iceman.habilidades(), #{ transformacion, supervelocidad })
+	}
+
+	test "Las habilidades de Blob después de aprender Inamovible no cambian pues ya la conocía" {
+		assert.doesNotThrowException({blob.aprender(inamovible)})
+		assert.equals(blob.habilidades(), #{ inamovible })
+	}
+
+	test "Las habilidades de Quicksilver después de aprender telepatía no cambian porque no la puede aprender" {
+		const e = new AprenderHabilidadException(mutante=quicksilver, habilidad=telepatia, message="Pietro Maximoff no puede apreneder esta habilidad de nucleo Telepatia") 		
+		assert.throwsExceptionLike(e, {quicksilver.aprender(telepatia)})
+		assert.equals(quicksilver.habilidades(), #{ supervelocidad })
+	}
+
+}

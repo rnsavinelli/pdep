@@ -1,0 +1,77 @@
+%esMateriaCorrelativa(NombreDeLaMateria, NombreDeLaMateriaCorrelativa).
+
+esMateriaCorrelativa(analisis_de_Sistemas, sistemas_y_Organizaciones).
+esMateriaCorrelativa(analisis_de_Sistemas, algoritmos_y_Estructuras_de_Datos).
+esMateriaCorrelativa(analisis_Matematico_II, algebra_y_Geometria_Analitica).
+esMateriaCorrelativa(analisis_Matematico_II, analisis_Matematico_I).
+
+esMateriaCorrelativa(sintaxis_y_Semantica_de_los_Lenguajes, matematica_Discreta).
+esMateriaCorrelativa(sintaxis_y_Semantica_de_los_Lenguajes, algoritmos_y_Estructuras_de_Datos).
+
+esMateriaCorrelativa(paradigmas_de_Programacion, algoritmos_y_Estructuras_de_Datos).
+esMateriaCorrelativa(paradigmas_de_Programacion, matematica_Discreta).
+
+esMateriaCorrelativa(probabilidad_y_Estadistica, analisis_Matematico_I).
+esMateriaCorrelativa(probabilidad_y_Estadistica, algebra_y_Geometria_Analitica).
+
+esMateriaCorrelativa(disenio_de_Sistemas, analisis_de_Sistemas).
+esMateriaCorrelativa(disenio_de_Sistemas, paradigmas_de_Programacion).
+
+esMateriaCorrelativa(sistemas_Operativos, matematica_Discreta).
+esMateriaCorrelativa(sistemas_Operativos, algoritmos_y_Estructuras_de_Datos).
+esMateriaCorrelativa(sistemas_Operativos, arquitectura_de_Computadoras).
+
+esMateriaCorrelativa(fisica_II, analisis_Matematico_I).
+esMateriaCorrelativa(fisica_II, fisica_I).
+
+esMateriaCorrelativa(economia, analisis_de_Sistemas).
+
+esMateriaCorrelativa(gestion_de_Datos, analisis_de_Sistemas).
+esMateriaCorrelativa(gestion_de_Datos, paradigmas_de_Programacion).
+esMateriaCorrelativa(gestion_de_Datos, sintaxis_y_Semantica_de_los_Lenguajes).
+
+esMateriaCorrelativa(ingles_II, ingles_I).
+
+esMateriaCorrelativa(matematica_Superior, analisis_Matematico_II).
+
+esMateriaCorrelativa(legislacion, analisis_de_Sistemas).
+esMateriaCorrelativa(legislacion, ingenieria_y_Sociedad).
+
+esMateriaCorrelativa(administracion_de_Recursos, disenio_de_Sistemas).
+esMateriaCorrelativa(administracion_de_Recursos, sistemas_Operativos).
+esMateriaCorrelativa(administracion_de_Recursos, economia).
+
+esMateriaCorrelativa(ingenieria_de_Software, probabilidad_y_Estadistica).
+esMateriaCorrelativa(ingenieria_de_Software, disenio_de_Sistemas).
+esMateriaCorrelativa(ingenieria_de_Software, gestion_de_Datos).
+
+esMateriaCorrelativa(teoria_de_Control, quimica).
+esMateriaCorrelativa(teoria_de_Control, matematica_Superior).
+
+esMateriaCorrelativa(comunicaciones, arquitectura_de_Computadoras).
+esMateriaCorrelativa(comunicaciones, analisis_Matematico_II).
+esMateriaCorrelativa(comunicaciones, fisica_II).
+
+esMateriaCorrelativa(redes_de_Informacion, sistemas_Operativos).
+esMateriaCorrelativa(redes_de_Informacion, comunicaciones).
+
+esMateriaCorrelativa(investigacion_Operativa, probabilidad_y_Estadistica).
+esMateriaCorrelativa(investigacion_Operativa, matematica_Superior).
+
+esMateriaCorrelativa(simulacion, probabilidad_y_Estadistica).
+esMateriaCorrelativa(simulacion, matematica_Superior).
+
+esMateriaCorrelativa(inteligencia_Artificial, investigacion_Operativa).
+esMateriaCorrelativa(inteligencia_Artificial, simulacion).
+
+esMateriaCorrelativa(administracion_Gerencial, administracion_de_Recursos).
+esMateriaCorrelativa(administracion_Gerencial, investigacion_Operativa).
+
+esMateriaCorrelativa(sistemas_de_Gestion, administracion_de_Recursos).
+esMateriaCorrelativa(sistemas_de_Gestion, investigacion_Operativa).
+esMateriaCorrelativa(sistemas_de_Gestion, simulacion).
+
+esMateriaCorrelativa(proyecto_Final, legislacion).
+esMateriaCorrelativa(proyecto_Final, administracion_de_Recursos).
+esMateriaCorrelativa(proyecto_Final, redes_de_Informacion).
+esMateriaCorrelativa(proyecto_Final, ingenieria_de_Software).
